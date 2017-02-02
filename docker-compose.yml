@@ -40,6 +40,7 @@ services:
       - ./irods.secrets.cfg:/etc/secrets:ro
       - ./externals/irods-ruleset:/rules
       - ./externals/irods-microservices:/microservices
+    privileged: true 
   ires:
     build: ires/
     hostname: ires

@@ -9,6 +9,9 @@ until psql -h irods-db -U postgres -c '\l'; do
   sleep 1
 done
 
+##Execute Iptables script
+/opt/irods/iptables_ICAT.sh
+
 # Update RIT rules
 cd /rules && make install
 

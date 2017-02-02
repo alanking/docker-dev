@@ -7,6 +7,9 @@ source /etc/secrets
 # Update RIT helpers
 cp /helpers/* /var/lib/irods/iRODS/server/bin/cmd/.
 
+##Execute Iptables script
+/opt/irods/iptables_IRES.sh
+
 # Mount ingest zones and rawdata
 mkdir -p /mnt/ingest/zones
 mkdir -p /mnt/ingest/shares/rawData
