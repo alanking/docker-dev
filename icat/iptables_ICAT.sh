@@ -18,6 +18,8 @@ FRONTEND="$(getent hosts irods-frontend | cut -d' ' -f1)"
 echo $FRONTEND
 IRES="$(getent hosts ires | cut -d' ' -f1)"
 echo $IRES
+METALNX="$(getent hosts metalnx | cut -d' ' -f1)"
+echo $METALNX
 
 # Set the default policy of the OUTPUT chain to ACCEPT
 iptables -P OUTPUT ACCEPT
@@ -39,6 +41,9 @@ iptables -A INPUT -p tcp --dport 1247 -s $PACMAN -j ACCEPT
 
 #Allow access on port 1247 from irods-frontend
 iptables -A INPUT -p tcp --dport 1247 -s $FRONTEND -j ACCEPT
+
+#Allow access on port 8000 from metalnx
+iptables -A INPUT -p tcp --dport 8000 -s $METALNX -j ACCEPT
 
 #Allow access on port 1247 and 1248 from ires
 iptables -A INPUT -p tcp --dport 1247 -s $IRES -j ACCEPT
