@@ -14,6 +14,8 @@ iptables -X; # delete all extra chains
 
 ICAT="$(getent hosts irods | cut -d' ' -f1)"
 echo $ICAT
+METALNX="$(getent hosts metalnx | cut -d' ' -f1)"
+echo $METALNX
 
 # Set the default policy of the OUTPUT chain to ACCEPT
 iptables -P OUTPUT ACCEPT
@@ -29,6 +31,9 @@ iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 #allow SSH from anywhere
 iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+
+#Allow access on port 8000 from metalnx
+iptables -A INPUT -p tcp --dport 8000 -s $METALNX -j ACCEPT
 
 #Allow access on port 1247 and 1248 from ICAT
 iptables -A INPUT -p tcp --dport 1247 -s $ICAT -j ACCEPT
