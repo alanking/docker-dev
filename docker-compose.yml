@@ -178,14 +178,14 @@ services:
   xnat-web:
     hostname: xnat-web
     build:
-      context: ./tomcat
+      context: ./xnat/tomcat
       args:
         LOCALE: 'en_AU'
     ports:
       - "8081:8080"
     volumes:
-      - ./webapps:/opt/tomcat/webapps
-      - ./plugins:/data/xnat/home/plugins
+      - ./xnat/webapps:/opt/tomcat/webapps
+      - ./xnat/plugins:/data/xnat/home/plugins
       - /var/run/docker.sock:/var/run/docker.sock
     expose:
       - "8080"
@@ -193,14 +193,14 @@ services:
       - xnat-db
   xnat-db:
     hostname: xnat-db
-    build: ./postgres
+    build: ./xnat/postgres
     expose:
       - "5432"
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
   xnat-nginx:
     hostname: xnat-nginx
-    build: ./nginx
+    build: ./xnat/nginx
     environment:
       VIRTUAL_HOST: xnat.${RIT_ENV}.rit.unimaas.nl
     ports:
