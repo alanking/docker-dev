@@ -178,7 +178,7 @@ services:
   xnat-web:
     hostname: xnat-web
     build:
-      context: ./xnat/tomcat
+      context: ./xnat/xnat-web
       args:
         LOCALE: 'en_AU'
     environment:
@@ -195,12 +195,12 @@ services:
       - common_default
   xnat-db:
     hostname: xnat-db
-    build: ./xnat/postgres
+    build: ./xnat/xnat-db
     expose:
       - "5432"
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./postgres-data:/var/lib/postgresql/data
+      - ./xnat-postgres-data:/var/lib/postgresql/data
     networks:
       - default
 
