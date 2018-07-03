@@ -53,10 +53,10 @@ ENV PATH $PATH:$CATALINA_HOME/bin
 
 RUN adduser --disabled-password --gecos '' xnat
 
-# Download XNAT .war archive
+# Download XNAT .war archive and deploy as ROOT container
 ENV XNAT_VERSION 1.7.4.1
 RUN wget -P /tmp/ https://api.bitbucket.org/2.0/repositories/xnatdev/xnat-web/downloads/xnat-web-${XNAT_VERSION}.war && \
-        mv /tmp/xnat-web-${XNAT_VERSION}.war /opt/tomcat/webapps/xnat.war
+        mv /tmp/xnat-web-${XNAT_VERSION}.war /opt/tomcat/webapps/ROOT.war
 
 RUN mkdir -p /data/xnat/home/config
 
