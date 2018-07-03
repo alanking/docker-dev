@@ -53,6 +53,11 @@ ENV PATH $PATH:$CATALINA_HOME/bin
 
 RUN adduser --disabled-password --gecos '' xnat
 
+# Download XNAT .war archive
+ENV XNAT_VERSION 1.7.4.1
+RUN wget -P /tmp/ https://api.bitbucket.org/2.0/repositories/xnatdev/xnat-web/downloads/xnat-web-${XNAT_VERSION}.war && \
+        mv /tmp/xnat-web-${XNAT_VERSION}.war /opt/tomcat/webapps/xnat.war
+
 RUN mkdir -p /data/xnat/home/config
 
 WORKDIR /data/xnat/home
@@ -67,7 +72,7 @@ ADD xnat-conf.properties /data/xnat/home/config
 
 EXPOSE 8080
 EXPOSE 8009
-VOLUME "/opt/tomcat/webapps"
+#VOLUME "/opt/tomcat/webapps"
 ADD setenv.sh /opt/tomcat/bin
 WORKDIR /opt/tomcat
 

@@ -183,10 +183,13 @@ services:
         LOCALE: 'en_AU'
     ports:
       - "8081:8080"
+    environment:
+      VIRTUAL_HOST: xnat.${RIT_ENV}.rit.unimaas.nl
+      VIRTUAL_PORT: 8080
     volumes:
-      - ./xnat/webapps:/opt/tomcat/webapps
+#      - ./xnat/webapps:/opt/tomcat/webapps
       - ./xnat/plugins:/data/xnat/home/plugins
-      - /var/run/docker.sock:/var/run/docker.sock
+#      - /var/run/docker.sock:/var/run/docker.sock
     expose:
       - "8080"
     links:
@@ -198,40 +201,40 @@ services:
       - "5432"
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
-  xnat-nginx:
-    hostname: xnat-nginx
-    build: ./xnat/nginx
-    environment:
-      VIRTUAL_HOST: xnat.${RIT_ENV}.rit.unimaas.nl
-    ports:
-      - "80:80"
-    expose:
-      - "80"
-    links:
-     - xnat-web
-  prometheus:
-    hostname: prometheus
-    image: prom/prometheus
-    volumes:
-      - ./prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yaml'
-    ports:
-      - '9090:9090'
-    links:
-      - cadvisor
-  cadvisor:
-    hostname: cadvisor
-    image: google/cadvisor
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:rw
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-    ports:
-      - "8082:8080"
-    expose:
-      - 8082
+#  xnat-nginx:
+#    hostname: xnat-nginx
+#    build: ./xnat/nginx
+#    environment:
+#      VIRTUAL_HOST: xnat.${RIT_ENV}.rit.unimaas.nl
+##    ports:
+##      - "83:80"
+#    expose:
+#      - "80"
+#    links:
+#     - xnat-web
+#  prometheus:
+#    hostname: prometheus
+#    image: prom/prometheus
+#    volumes:
+#      - ./prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml
+#    command:
+#      - '--config.file=/etc/prometheus/prometheus.yaml'
+#    ports:
+#      - '9090:9090'
+#    links:
+#      - cadvisor
+#  cadvisor:
+#    hostname: cadvisor
+#    image: google/cadvisor
+#    volumes:
+#      - /:/rootfs:ro
+#      - /var/run:/var/run:rw
+#      - /sys:/sys:ro
+#      - /var/lib/docker/:/var/lib/docker:ro
+#    ports:
+#      - "8082:8080"
+#    expose:
+#      - 8082
 networks:
   oculus_default:
     external: true
