@@ -113,8 +113,8 @@ if [[ -z $RIT_ENV ]]; then
     if [[ $HOSTNAME == "fhml-srv065" ]]; then
         RIT_ENV="dev3"
     fi
-`
-   if [[ $HOSTNAME == "fhml-srv073" ]]; then
+
+    if [[ $HOSTNAME == "fhml-srv073" ]]; then
         RIT_ENV="dev4"
     fi
 
