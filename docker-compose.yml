@@ -22,6 +22,7 @@ services:
       OLS_URL: http://ols.tst.rit.unimaas.nl
       LOGSTASH_TAGS: PACMAN
       JWT_SECRET: foobar
+      ORCID_CLIENT_SECRET : XXXXXXXX
   irods:
     build: icat/
     hostname: irods
