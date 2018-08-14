@@ -38,6 +38,7 @@ services:
       - common_default
     volumes:
       - /etc/localtime:/etc/localtime:ro
+      - irods-secrets-data:/etc/secrets:ro
       - irods-rules-data:/
       - irods-microservices-data:/
   ires:
@@ -57,6 +58,7 @@ services:
       - common_default
     volumes:
       - /etc/localtime:/etc/localtime:ro
+      - irods-secrets-data:/etc/secrets:ro
       - irods-rules-data:/
       - irods-microservices-data:/
       - irods-helpers-data:/
@@ -76,6 +78,7 @@ services:
       LOGSPOUT: ignore
     volumes:
       - /etc/localtime:/etc/localtime:ro
+      - irods-secrets-data:/etc/secrets:ro
       - irods-rules-data:/
       - irods-microservices-data:/
       - irods-helpers-data:/
@@ -190,3 +193,6 @@ volumes:
     external: true
   crossref-lookup-data: 
     external: true
+  irods-secrets-data:: 
+    external: true
+
