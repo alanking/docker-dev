@@ -16,6 +16,166 @@ services:
       OLS_URL: http://ols.tst.rit.unimaas.nl
       LOGSTASH_TAGS: PACMAN
       JWT_SECRET: foobar
+  irods:
+    build: icat/
+    hostname: irods
+    ports:
+      - "1247:1247"
+      - "1248:1248"
+    environment:
+      RODS_PASSWORD: irods
+      PGPASSWORD: foobar
+      VIRTUAL_HOST: irods.${RIT_ENV}.rit.unimaas.nl
+      IRODS_RESOURCE_HOST_DEB: ires
+      IRODS_RESOURCE_HOST_RPM: ires-centos
+      IRODS_INGEST_REMOVE_DELAY: 5m
+      MIRTH_VALIDATION_CHANNEL: mirthconnect:6669
+      MIRTH_METADATA_CHANNEL: mirthconnect:6670
+      MIRTH_MDL_EXPORT_CHANNEL: fhml-srv024.unimaas.nl:6666
+      LOGSPOUT: ignore
+    networks:
+      - default
+      - common_default
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./irods.secrets.cfg:/etc/secrets:ro
+      - ./externals/irods-ruleset:/rules
+      - ./externals/irods-microservices:/microservices
+  ires:
+    build: ires/
+    hostname: ires
+    environment:
+      RODS_PASSWORD: irods
+      PGPASSWORD: foobar
+      VIRTUAL_HOST: ires.${RIT_ENV}.rit.unimaas.nl
+      IRODS_INGEST_REMOVE_DELAY: 5m
+      MIRTH_VALIDATION_CHANNEL: mirthconnect:6669
+      MIRTH_METADATA_CHANNEL: mirthconnect:6670
+      MIRTH_MDL_EXPORT_CHANNEL: fhml-srv024.unimaas.nl:6666
+      LOGSPOUT: ignore
+    networks:
+      - default
+      - common_default
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./irods.secrets.cfg:/etc/secrets:ro
+      - ./externals/irods-ruleset:/rules
+      - ./externals/irods-microservices:/microservices
+      - ./externals/irods-helper-cmd:/helpers
+    # Required for CIFS mounting. cap-add not enough in Windows for some reason.
+    privileged: true
+  ires-centos:
+    build: ires-centos/
+    hostname: ires-centos
+    environment:
+      RODS_PASSWORD: irods
+      PGPASSWORD: foobar
+      VIRTUAL_HOST: ires-centos.${RIT_ENV}.rit.unimaas.nl
+      IRODS_INGEST_REMOVE_DELAY: 5m
+      MIRTH_VALIDATION_CHANNEL: mirthconnect:6669
+      MIRTH_METADATA_CHANNEL: mirthconnect:6670
+      MIRTH_MDL_EXPORT_CHANNEL: fhml-srv024.unimaas.nl:6666
+      LOGSPOUT: ignore
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./irods.secrets.cfg:/etc/secrets:ro
+      - ./externals/irods-ruleset:/rules
+      - ./externals/irods-microservices:/microservices
+      - ./externals/irods-helper-cmd:/helpers
+    # Required for CIFS mounting. cap-add not enough in Windows for some reason.
+    privileged: true
+    networks:
+      - default
+      - common_default
+  db:
+    image: mysql:5.6
+    hostname: db
+    environment:
+      MYSQL_DATABASE: pacman
+      MYSQL_ROOT_PASSWORD: foobar
+      LOGSPOUT: ignore
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+  irods-db:
+    image: postgres:9.4
+    hostname: irods-db
+    environment:
+      POSTGRES_PASSWORD: foobar
+      LOGSPOUT: ignore
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+  irods-frontend:
+    build: externals/irods-frontend/
+    hostname: irods-frontend
+    environment:
+      VIRTUAL_HOST: frontend.${RIT_ENV}.rit.unimaas.nl
+      PACMAN_HOST: http://pacman.${RIT_ENV}.rit.unimaas.nl
+      LOGSPOUT: ignore
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - default
+      - common_default
+  davrods:
+    build: externals/rit-davrods/
+    environment:
+      VIRTUAL_HOST: webdav.${RIT_ENV}.rit.unimaas.nl
+      LOGSTASH_TAGS: DAVRODS
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - default
+      - common_default
+  metalnx:
+    build: externals/rit-metalnx-web/
+    hostname: metalnx
+    environment:
+      IRODS_HOST: irods
+      IRODS_PORT: 1247
+      IRODS_ZONE: nlmumc
+      IRODS_USER: rods
+      IRODS_PASS: irods
+      VIRTUAL_HOST: metalnx.${RIT_ENV}.rit.unimaas.nl
+      VIRTUAL_PORT: 8080
+      LOGSTASH_TAGS: METALNX
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+  mirthconnect:
+    build: mirthconnect/
+    hostname: mirthconnect
+    ports:
+      - "8443:8443"
+      - "6661:6661"
+      - "6671:6671"
+    environment:
+      PGPASSWORD: foobar
+      RIT_ENV: ${RIT_ENV}
+      VIRTUAL_HOST: mirthconnect.${RIT_ENV}.rit.unimaas.nl
+      LOGSPOUT: ignore
+    networks:
+      - default
+      - oculus_default
+      - common_default
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./externals/channels:/opt/channels
+      - ./channels-backup:/opt/channels-backup
+  crossref-lookup:
+    build: externals/crossref-lookup
+    volumes:
+      - ./externals/crossref-lookup/app:/usr/src/app
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      VIRTUAL_HOST: crossref-lookup.${RIT_ENV}.rit.unimaas.nl
+    networks:
+      - default
+  proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
 networks:
   oculus_default:
     external: true
