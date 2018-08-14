@@ -39,8 +39,8 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - irods-secrets-data:/etc/secrets:ro
-      - irods-rules-data:/
-      - irods-microservices-data:/
+      - irods-rules-data:/rules
+      - irods-microservices-data:/microservices
   ires:
     build: ires/
     hostname: ires
@@ -59,9 +59,9 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - irods-secrets-data:/etc/secrets:ro
-      - irods-rules-data:/
-      - irods-microservices-data:/
-      - irods-helpers-data:/
+      - irods-rules-data:/rules
+      - irods-microservices-data:/microservices
+      - irods-helpers-data:/helpers
     # Required for CIFS mounting. cap-add not enough in Windows for some reason.
     privileged: true
   ires-centos:
@@ -79,9 +79,9 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - irods-secrets-data:/etc/secrets:ro
-      - irods-rules-data:/
-      - irods-microservices-data:/
-      - irods-helpers-data:/
+      - irods-rules-data:/rules
+      - irods-microservices-data:/microservices
+      - irods-helpers-data:/helpers
     # Required for CIFS mounting. cap-add not enough in Windows for some reason.
     privileged: true
     networks:
