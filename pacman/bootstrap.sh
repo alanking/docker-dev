@@ -1,13 +1,6 @@
 #!/bin/bash
 
 cd /var/www/html/sites/all/modules/pacman && composer update
-# TMP DEBUG
-ls -al /var/www/html/sites/all/modules/
-ls -al /var/www/html/sites/all/modules/rit_faker
-ls -al /var/www/html/sites/all/modules/islandora_crossref_lookup
-ls -al /var/www/html/sites/all/modules/islandora_ontology_autocomplete
-ls -al /var/www/html/sites/all/modules/pacman
-
 
 cd /var/www/html/sites/all/modules/rit_faker && composer update
 
