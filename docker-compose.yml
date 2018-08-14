@@ -5,7 +5,14 @@ services:
     hostname: pacman
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - pacman-data:/var/www/html/sites/
+      - pacman-handsontable-data:/var/www/html/sites/all/modules/handsontable
+      - pacman-islandora_ontology_autocomplete-data:/var/www/html/sites/all/modules/islandora_ontology_autocomplete
+      - pacman-islandora_crossref_lookup-data:/var/www/html/sites/all/modules/islandora_crossref_lookup
+      - pacman-pacman-data:/var/www/html/sites/all/modules/pacman
+      - pacman-rit_landing_page-data:/var/www/html/sites/all/modules/rit_landing_page
+      - pacman-rit_forms-data:/var/www/html/sites/all/modules/rit_forms
+      - pacman-rit_faker-data:/var/www/html/sites/all/modules/rit_faker
+      - pacman-fhml_um_theme_demo-data:/var/www/html/sites/all/themes/fhml_um_theme_demo
     environment:
       IRODS_FRONTEND_ENV_VIRTUAL_HOST: frontend.${RIT_ENV}.rit.unimaas.nl
       IRODS_HOST: irods
@@ -181,7 +188,21 @@ networks:
   common_default:
     external: true
 volumes:
-  pacman-data: 
+  pacman-fhml_um_theme_demo-data: 
+    external: true
+  pacman-handsontable-data: 
+    external: true
+  pacman-islandora_ontology_autocomplete-data: 
+    external: true
+  pacman-islandora_crossref_lookup-data: 
+    external: true
+  pacman-pacman-data: 
+    external: true
+  pacman-rit_landing_page-data: 
+    external: true
+  pacman-rit_forms-data: 
+    external: true
+  pacman-rit_faker-data: 
     external: true
   irods-helpers-data: 
     external: true
