@@ -2,7 +2,7 @@
 
 set -e
 
-source /etc/secrets
+source /etc/secrets/secrets
 
 until psql -h irods-db -U postgres -c '\l'; do
   >&2 echo "Postgres is unavailable - sleeping"
