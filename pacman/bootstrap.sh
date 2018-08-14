@@ -1,6 +1,9 @@
 #!/bin/bash
 
 cd /var/www/html/sites/all/modules/pacman && composer update
+# TMP DEBUG
+ls -al /var/www/html/sites/all/modules/
+ls -al /var/www/html/sites/all/modules/rit_faker
 
 cd /var/www/html/sites/all/modules/rit_faker && composer update
 
