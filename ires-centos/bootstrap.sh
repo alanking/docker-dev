@@ -2,7 +2,7 @@
 
 set -e
 
-source /etc/secrets
+source /etc/secrets/secrets
 
 # Update RIT rules
 # FYI: This step (and make of the microservices) rely on sequential starts of the ires-containers. If those containers
