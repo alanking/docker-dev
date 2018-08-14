@@ -162,7 +162,7 @@ services:
   crossref-lookup:
     build: externals/crossref-lookup
     volumes:
-      - crossref-lookup-data:/usr/src/
+      - crossref-lookup-data:/usr/src/app
       - /etc/localtime:/etc/localtime:ro
     environment:
       VIRTUAL_HOST: crossref-lookup.${RIT_ENV}.rit.unimaas.nl
