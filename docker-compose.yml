@@ -38,9 +38,8 @@ services:
       - common_default
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./irods.secrets.cfg:/etc/secrets:ro
-      - ./externals/irods-ruleset:/rules
-      - ./externals/irods-microservices:/microservices
+      - irods-rules-data:/
+      - irods-microservices-data:/
   ires:
     build: ires/
     hostname: ires
@@ -58,10 +57,9 @@ services:
       - common_default
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./irods.secrets.cfg:/etc/secrets:ro
-      - ./externals/irods-ruleset:/rules
-      - ./externals/irods-microservices:/microservices
-      - ./externals/irods-helper-cmd:/helpers
+      - irods-rules-data:/
+      - irods-microservices-data:/
+      - irods-helpers-data:/
     # Required for CIFS mounting. cap-add not enough in Windows for some reason.
     privileged: true
   ires-centos:
@@ -78,10 +76,9 @@ services:
       LOGSPOUT: ignore
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./irods.secrets.cfg:/etc/secrets:ro
-      - ./externals/irods-ruleset:/rules
-      - ./externals/irods-microservices:/microservices
-      - ./externals/irods-helper-cmd:/helpers
+      - irods-rules-data:/
+      - irods-microservices-data:/
+      - irods-helpers-data:/
     # Required for CIFS mounting. cap-add not enough in Windows for some reason.
     privileged: true
     networks:
@@ -158,12 +155,11 @@ services:
       - common_default
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./externals/channels:/opt/channels
-      - ./channels-backup:/opt/channels-backup
+      - mirthconnect-data:/opt
   crossref-lookup:
     build: externals/crossref-lookup
     volumes:
-      - ./externals/crossref-lookup/app:/usr/src/app
+      - crossref-lookup-data:/usr/src/
       - /etc/localtime:/etc/localtime:ro
     environment:
       VIRTUAL_HOST: crossref-lookup.${RIT_ENV}.rit.unimaas.nl
@@ -183,4 +179,14 @@ networks:
     external: true
 volumes:
   pacman-data: 
+    external: true
+  irods-helpers-data: 
+    external: true
+  irods-microservices-data: 
+    external: true
+  irods-rules-data: 
+    external: true
+  mirthconnect-data: 
+    external: true
+  crossref-lookup-data: 
     external: true
