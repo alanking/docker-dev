@@ -193,6 +193,6 @@ volumes:
     external: true
   crossref-lookup-data: 
     external: true
-  irods-secrets-data:: 
+  irods-secrets-data:
     external: true
 
