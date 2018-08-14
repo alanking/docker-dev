@@ -158,7 +158,7 @@ services:
       - common_default
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - mirthconnect-data:/opt
+      - mirthconnect-data:/opt/channels
   crossref-lookup:
     build: externals/crossref-lookup
     volumes:
