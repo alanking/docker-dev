@@ -2,6 +2,8 @@
 
 set -e
 
+
+chmod 777 /etc/secrets/secrets
 source /etc/secrets/secrets
 
 until psql -h irods-db -U postgres -c '\l'; do
