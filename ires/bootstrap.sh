@@ -2,6 +2,7 @@
 
 set -e
 
+chmod 777 /etc/secrets/secrets
 source /etc/secrets/secrets
 
 # Update RIT rules
