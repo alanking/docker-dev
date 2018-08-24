@@ -112,7 +112,7 @@ pipeline {
                 sh 'docker volume create irods-microservices-data'
                 sh 'docker volume create irods-rules-data'
                 dir('rules'){
-                    git(url: 'git@github.com:MaastrichtUniversity/irods-ruleset.git',credentialsId: '87c5abc8-06bf-40c5-bab4-249f6403184f', branch: 'master')
+                    git(url: 'git@github.com:MaastrichtUniversity/irods-ruleset.git',credentialsId: '87c5abc8-06bf-40c5-bab4-249f6403184f', branch: 'jenkins')
                 }
                 dir('microservices'){
                     git(url: 'git@github.com:MaastrichtUniversity/irods-microservices.git',credentialsId: '87c5abc8-06bf-40c5-bab4-249f6403184f', branch: 'master')
@@ -249,10 +249,44 @@ pipeline {
 			'''
             }
         }
+		stage('git clone selenium') {
+      steps {
+        dir('selenium_test'){	
+            git(url: 'ssh://git@bitbucket.rit.unimaas.nl:7999/ritdev/selenium_tests.git',credentialsId: '87c5abc8-06bf-40c5-bab4-249f6403184f', branch: 'docker_dev')
+        }
+      }
+    }
+    stage('docker build selenium test') {
+      steps {
+        dir('selenium_test'){
+        sh 'docker build -t selenium_docker_dev_test .'
+        }
+      }
+    }
+    stage('docker run selenium test') {
+      steps {
+        dir('selenium_test'){
+            sh "docker volume create selenium-data-${env.JOB_NAME}"
+            sh "docker run -e RIT_ENV=${RIT_ENV} --name selenium_docker_dev_test --mount source=selenium-data-${env.JOB_NAME},target=/usr/src/app/test-results selenium_docker_dev_test"
+            }
+        }
+		post {
+			always {
+				dir('selenium_test'){
+				dir('test_results'){ writeFile file:'dummy', text:''
+				sh "docker run -v selenium-data-${env.JOB_NAME}:/data --name helper busybox true"
+				sh 'docker cp helper:/data .'
+				sh 'docker rm helper'
+				}
+				}
+			}
+	    }
+    }
     }
     post {
         always {
             sh 'docker-compose down'
+			sh 'docker rm selenium_docker_dev_test'
             sh '''#!/bin/bash
             set -x
 		     if [ "$(docker ps -aq -f status=exited -f name=helper)" ]; then
@@ -274,6 +308,7 @@ pipeline {
 "mirthconnect-data"
 "crossref-lookup-data" 
 "irods-secrets-data"
+"selenium-data-${env.JOB_NAME}"
 )
 			for i in "${array[@]}"
 			do
@@ -284,6 +319,8 @@ pipeline {
             fi
 			done
 		    '''
+		archiveArtifacts artifacts: 'selenium_test/test_results/data/**'
+            junit 'selenium_test/test_results/data/*.py.xml'
         }
         success {
             slackSend color: "#00ff04", message: "WAUW amazing :) - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
