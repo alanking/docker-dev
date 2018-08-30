@@ -36,7 +36,7 @@ pipeline {
                 //fhml_um_theme_demo
 				sh 'docker volume create pacman-fhml_um_theme_demo-data'
 				dir('fhml_um_theme_demo'){
-					git(url: 'ssh://git@bitbucket.rit.unimaas.nl:7999/ritdev/fhml_um_theme_demo.git',credentialsId: '87c5abc8-06bf-40c5-bab4-249f6403184f', branch: 'master')
+					git(url: 'ssh://git@bitbucket.rit.unimaas.nl:7999/ritdev/fhml_um_theme_demo.git',credentialsId: 'SHH-private-key', branch: 'master')
 				}
 				sh 'docker run -v pacman-fhml_um_theme_demo-data:/data --name helper busybox true'
                 sh 'docker cp fhml_um_theme_demo/. helper:/data '
@@ -45,7 +45,7 @@ pipeline {
 				//handsontable
 				sh 'docker volume create pacman-handsontable-data'
 				dir('handsontable'){
-                     git(url: 'git@github.com:MaastrichtUniversity/handsontable.git',credentialsId: '87c5abc8-06bf-40c5-bab4-249f6403184f', branch: 'master')
+                     git(url: 'git@github.com:MaastrichtUniversity/handsontable.git',credentialsId: 'SHH-private-key', branch: 'master')
                 }
 				sh 'docker run -v pacman-handsontable-data:/data --name helper busybox true'
                 sh 'docker cp handsontable/. helper:/data '
@@ -54,7 +54,7 @@ pipeline {
 				//islandora_ontology_autocomplete
 				sh 'docker volume create pacman-islandora_ontology_autocomplete-data'
 				dir('islandora_ontology_autocomplete'){
-                            git(url: 'git@github.com:MaastrichtUniversity/islandora_ontology_autocomplete.git',credentialsId: '87c5abc8-06bf-40c5-bab4-249f6403184f', branch: 'master')
+                            git(url: 'git@github.com:MaastrichtUniversity/islandora_ontology_autocomplete.git',credentialsId: 'SHH-private-key', branch: 'master')
                 }
 				sh 'docker run -v pacman-islandora_ontology_autocomplete-data:/data --name helper busybox true'
                 sh 'docker cp islandora_ontology_autocomplete/. helper:/data '
@@ -63,7 +63,7 @@ pipeline {
 				//islandora_crossref_lookup
 				sh 'docker volume create pacman-islandora_crossref_lookup-data'
 				dir('islandora_crossref_lookup'){
-                            git(url: 'git@github.com:MaastrichtUniversity/islandora_crossref_lookup.git',credentialsId: '87c5abc8-06bf-40c5-bab4-249f6403184f', branch: 'master')
+                            git(url: 'git@github.com:MaastrichtUniversity/islandora_crossref_lookup.git',credentialsId: 'SHH-private-key', branch: 'master')
                 }
 				sh 'docker run -v pacman-islandora_crossref_lookup-data:/data --name helper busybox true'
                 sh 'docker cp islandora_crossref_lookup/. helper:/data '
@@ -72,7 +72,7 @@ pipeline {
 				//pacman
 				sh 'docker volume create pacman-pacman-data'
 				dir('rit-pacman'){
-                            git(url: 'git@github.com:MaastrichtUniversity/rit-pacman.git',credentialsId: '87c5abc8-06bf-40c5-bab4-249f6403184f', branch: 'master')
+                            git(url: 'git@github.com:MaastrichtUniversity/rit-pacman.git',credentialsId: 'SHH-private-key', branch: 'master')
                 }
 				sh 'docker run -v pacman-pacman-data:/data --name helper busybox true'
                 sh 'docker cp rit-pacman/. helper:/data '
@@ -81,7 +81,7 @@ pipeline {
 				//rit_landing_page
 				sh 'docker volume create pacman-rit_landing_page-data'
 				dir('rit_landing_page'){
-                            git(url: 'git@github.com:MaastrichtUniversity/rit_landing_page.git',credentialsId: '87c5abc8-06bf-40c5-bab4-249f6403184f', branch: 'master')
+                            git(url: 'git@github.com:MaastrichtUniversity/rit_landing_page.git',credentialsId: 'SHH-private-key', branch: 'master')
                 }
 				sh 'docker run -v pacman-rit_landing_page-data:/data --name helper busybox true'
                 sh 'docker cp rit_landing_page/. helper:/data '
@@ -90,7 +90,7 @@ pipeline {
 				//rit_forms
 				sh 'docker volume create pacman-rit_forms-data'
 				dir('rit_forms'){
-                            git(url: 'git@github.com:MaastrichtUniversity/rit_forms.git',credentialsId: '87c5abc8-06bf-40c5-bab4-249f6403184f', branch: 'master')
+                            git(url: 'git@github.com:MaastrichtUniversity/rit_forms.git',credentialsId: 'SHH-private-key', branch: 'master')
                 }
 				sh 'docker run -v pacman-rit_forms-data:/data --name helper busybox true'
                 sh 'docker cp rit_forms/. helper:/data'
@@ -99,7 +99,7 @@ pipeline {
 				//rit_faker
 				sh 'docker volume create pacman-rit_faker-data'
 				dir('rit_faker'){
-                            git(url: 'git@github.com:MaastrichtUniversity/rit_faker.git',credentialsId: '87c5abc8-06bf-40c5-bab4-249f6403184f', branch: 'master')
+                            git(url: 'git@github.com:MaastrichtUniversity/rit_faker.git',credentialsId: 'SHH-private-key', branch: 'master')
                 }
 				sh 'docker run -v pacman-rit_faker-data:/data --name helper busybox true'
                 sh 'docker cp rit_faker/. helper:/data '
@@ -112,13 +112,13 @@ pipeline {
                 sh 'docker volume create irods-microservices-data'
                 sh 'docker volume create irods-rules-data'
                 dir('rules'){
-                    git(url: 'git@github.com:MaastrichtUniversity/irods-ruleset.git',credentialsId: '87c5abc8-06bf-40c5-bab4-249f6403184f', branch: 'jenkins')
+                    git(url: 'git@github.com:MaastrichtUniversity/irods-ruleset.git',credentialsId: 'SHH-private-key', branch: 'jenkins')
                 }
                 dir('microservices'){
-                    git(url: 'git@github.com:MaastrichtUniversity/irods-microservices.git',credentialsId: '87c5abc8-06bf-40c5-bab4-249f6403184f', branch: 'master')
+                    git(url: 'git@github.com:MaastrichtUniversity/irods-microservices.git',credentialsId: 'SHH-private-key', branch: 'master')
                 }
                 dir('helpers'){
-                    git(url: 'git@github.com:MaastrichtUniversity/irods-helper-cmd.git',credentialsId: '87c5abc8-06bf-40c5-bab4-249f6403184f', branch: 'jenkins')
+                    git(url: 'git@github.com:MaastrichtUniversity/irods-helper-cmd.git',credentialsId: 'SHH-private-key', branch: 'jenkins')
                 }
                 sh 'docker run -v irods-helpers-data:/data --name helper busybox true'
                 sh 'docker cp helpers/. helper:/data '
@@ -149,7 +149,7 @@ pipeline {
             steps {
                 dir('externals'){
                     dir('irods-frontend'){
-                        git(url: 'git@github.com:MaastrichtUniversity/irods-frontend.git',credentialsId: '87c5abc8-06bf-40c5-bab4-249f6403184f', branch: 'master')
+                        git(url: 'git@github.com:MaastrichtUniversity/irods-frontend.git',credentialsId: 'SHH-private-key', branch: 'master')
                     }
                 }
             }
@@ -158,7 +158,7 @@ pipeline {
             steps {
                 dir('externals'){
                     dir('rit-davrods'){
-                        git(url: 'git@github.com:MaastrichtUniversity/rit-davrods.git',credentialsId: '87c5abc8-06bf-40c5-bab4-249f6403184f', branch: 'master')
+                        git(url: 'git@github.com:MaastrichtUniversity/rit-davrods.git',credentialsId: 'SHH-private-key', branch: 'master')
                     }
                 }
             }
@@ -167,7 +167,7 @@ pipeline {
             steps {
                 dir('externals'){
                     dir('rit-metalnx-web'){
-                        git(url: 'git@github.com:MaastrichtUniversity/rit-metalnx-web.git',credentialsId: '87c5abc8-06bf-40c5-bab4-249f6403184f', branch: 'master')
+                        git(url: 'git@github.com:MaastrichtUniversity/rit-metalnx-web.git',credentialsId: 'SHH-private-key', branch: 'master')
                     }
                 }
             }
@@ -176,7 +176,7 @@ pipeline {
             steps {
                 sh 'docker volume create mirthconnect-data'
                 dir('channels'){
-                    git(url: 'ssh://git@bitbucket.rit.unimaas.nl:7999/mirthc/channels.git',credentialsId: '87c5abc8-06bf-40c5-bab4-249f6403184f', branch: 'master')
+                    git(url: 'ssh://git@bitbucket.rit.unimaas.nl:7999/mirthc/channels.git',credentialsId: 'SHH-private-key', branch: 'master')
                 }
                 sh 'docker run -v mirthconnect-data:/data --name helper busybox true'
                 sh 'docker cp channels/. helper:/data '
@@ -187,7 +187,7 @@ pipeline {
             steps {
                 dir('externals'){
                     dir('crossref-lookup'){
-                        git(url: 'git@github.com:MaastrichtUniversity/crossref-lookup.git',credentialsId: '87c5abc8-06bf-40c5-bab4-249f6403184f', branch: 'master')
+                        git(url: 'git@github.com:MaastrichtUniversity/crossref-lookup.git',credentialsId: 'SHH-private-key', branch: 'master')
                     }
                 }
             }
@@ -196,7 +196,7 @@ pipeline {
             steps {
                 sh 'docker volume create crossref-lookup-data'
                 dir('app'){
-                    git(url: 'git@github.com:MaastrichtUniversity/crossref-lookup.git',credentialsId: '87c5abc8-06bf-40c5-bab4-249f6403184f', branch: 'master')
+                    git(url: 'git@github.com:MaastrichtUniversity/crossref-lookup.git',credentialsId: 'SHH-private-key', branch: 'master')
                 }
                 sh 'docker run -v crossref-lookup-data:/data --name helper busybox true'
                 sh 'docker cp app/app/. helper:/data '
@@ -252,7 +252,7 @@ pipeline {
 		stage('git clone selenium') {
       steps {
         dir('selenium_test'){	
-            git(url: 'ssh://git@bitbucket.rit.unimaas.nl:7999/ritdev/selenium_tests.git',credentialsId: '87c5abc8-06bf-40c5-bab4-249f6403184f', branch: 'docker_dev')
+            git(url: 'ssh://git@bitbucket.rit.unimaas.nl:7999/ritdev/selenium_tests.git',credentialsId: 'SHH-private-key', branch: 'docker_dev')
         }
       }
     }
