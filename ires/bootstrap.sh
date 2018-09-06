@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -xe
+set -e
 
 chmod 777 /etc/secrets/secrets
 source /etc/secrets/secrets
