@@ -16,6 +16,7 @@ if [[ $1 == "create-ingest-zones" ]]; then
         docker exec corpus_pacman_1 drush create-ingest-zone p.suppers@${domain}
         docker exec corpus_pacman_1 drush create-ingest-zone r.niesten@${domain}
         docker exec corpus_pacman_1 drush create-ingest-zone r.brecheisen@${domain}
+        docker exec corpus_pacman_1 drush create-ingest-zone jonathan.melius@${domain}
     done
 
     exit 0
@@ -33,10 +34,12 @@ if [[ $1 == "create-project-collections" ]]; then
         docker exec corpus_pacman_1 drush create-project-collection m.coonen@${domain} P000000003
         docker exec corpus_pacman_1 drush create-project-collection d.theunissen@${domain} P000000003
         docker exec corpus_pacman_1 drush create-project-collection r.niesten@${domain} P000000003
+        docker exec corpus_pacman_1 drush create-project-collection jonathan.melius@${domain} P000000003
         echo "In P000000004"
         docker exec corpus_pacman_1 drush create-project-collection m.coonen@${domain} P000000004
         docker exec corpus_pacman_1 drush create-project-collection d.theunissen@${domain} P000000004
         docker exec corpus_pacman_1 drush create-project-collection r.niesten@${domain} P000000004
+        docker exec corpus_pacman_1 drush create-project-collection jonathan.melius@${domain} P000000004
     done
 
     exit 0
@@ -54,6 +57,7 @@ externals/islandora_crossref_lookup git@github.com:MaastrichtUniversity/islandor
 externals/rit_faker git@github.com:MaastrichtUniversity/rit_faker.git
 externals/rit_forms git@github.com:MaastrichtUniversity/rit_forms.git
 externals/rit-pacman git@github.com:MaastrichtUniversity/rit-pacman.git
+externals/rit_landing_page git@github.com:MaastrichtUniversity/rit_landing_page.git
 externals/irods-frontend git@github.com:MaastrichtUniversity/irods-frontend.git
 externals/rit-metalnx-web git@github.com:MaastrichtUniversity/rit-metalnx-web.git
 externals/rit-davrods git@github.com:MaastrichtUniversity/rit-davrods.git
