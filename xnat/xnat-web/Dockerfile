@@ -72,6 +72,7 @@ ADD xnat-conf.properties /data/xnat/home/config
 
 EXPOSE 8080
 EXPOSE 8009
+EXPOSE 8104
 
 ADD setenv.sh /opt/tomcat/bin
 WORKDIR /opt/tomcat
