@@ -1,0 +1,127 @@
+#==============================================================================
+#
+#   Rule:       20 - iRODS errors
+#
+#   Purpose:    Send an alert to Slack if an irods error occurs
+#
+#   Descr:      logtrail=irods and level=error
+#
+#==============================================================================
+
+# Note that rule name equals filename and rules are initially executed in alphanumeric order of the rule names!
+
+### Index to perform query on. Valid indexes (or index patterns) are: core, aux, all) [required]
+index: core
+
+### Type of the rule [required]
+# valid rule types are:
+#   - Any           Match everything
+#   - Blacklist     Check certain fields (<compare_key>) agains the <blacklist> and match when it is in the blacklist
+#   - Whitelist     Check certain fields (<compare_key>) agains the <whitelist> and match when it is NOT in the blacklist
+#   - Change        Monitor a certain field (<compare_key>) and match if that field changes based on same field with same <query_key>
+#   - Frequency     Match when at least <num_events> occurrences is found in the <timeframe> (and not seen before)
+#   - Spike         Matches when <num_events> is <skike_height> times larger/smaller than in the previous window <timeframe>
+#   - Flatline      Matches when the total number of events is under a given <threshold> in the <timeframe>
+#   - New_term      matches when the a new value (<new_term>) appears in <fields>
+#   - Cardinality   Matches when <num_events> for <cardinality_field> within the <timeframe> is higher or lower than <min_cardinality> or <max_cardinality>
+#
+# see https://elastalert.readthedocs.io/en/latest/ruletypes.html for more details and configuration options
+#
+type: frequency
+
+
+### general rule configuration [required]
+
+filter:
+- query:
+    term:
+      level: ERROR
+- query:
+    term:
+      logtrail: irods
+
+
+### ruletype specific configuration [depending on ruletype]
+
+num_events: 1
+timeframe:
+    minutes: 15
+
+### Alert configuration
+
+### Used alert(s) for this rule [required]
+# Valid alerts (as potentially used within DataHub) are:
+#   - command       Executes a command (eg. used to send an alert to Nagios by NRDP)
+#   - email         Sends an email via smtp server
+#   - jira          Creates a ticket in Jira (only available with service account for ElestAlert)
+#   - slack         Sends a message to a predefined Slack channel
+#   - http post     Sends results to a JSON endpoint using HTTP POST
+#
+# More information and alerter specific fields can be found at https://elastalert.readthedocs.io/en/latest/ruletypes.html#alerts
+#
+alert:
+- "slack"
+
+### general alert configuration
+
+### Text for the subject [optional], default is rule name
+#
+# the alert text can be formatted using standard Python formatting syntax. this
+# means the alert_subject field can contain placeholders like {0}, {1}, etc. These
+# placeholders will be replaced by the subsequent values of the field alert_subject_args.
+# Example:
+#   alert_subject: "Issue {0} occurred at {1}
+#   alert_subject_args:
+#   - issue.name
+#   - "@timestamp"
+#
+alert_subject: "At least {0} iRODS error(s) occurred in the last 5 min! Please check ELK!"
+alert_subject_args:
+- num_matches
+
+### Content of alert body is depending on the alert text type [optional]
+#
+# valid values for alert_text type and corresponding default body format
+#   - default                   rule_name
+#                               [ alert_text ]
+#                               ruletype_text
+#                               { top_counts }
+#                               { field_values}
+#
+#   - alert_text_only           rule_name
+#                               alert_text
+#
+#   - exclude_fields            rule_name
+#                               [ alert_text ]
+#                               ruletype_text
+#                               { top_counts }
+#
+#   - aggregation_summary_only  rule_name
+#                               aggregation_summary
+#
+#alert_text_type: alert_text_only
+
+### Alert Body [optional]
+#
+# the alert text can be formatted using standard Python formatting syntax. See
+# field alert_subject above for more info and an example.
+#
+#alert_text: "{0}"
+#alert_text_args:
+#- message
+#- related_events
+
+### alerter specific configuration
+
+### Slack message color [optional]
+#
+# valid values are:
+# - good      shows a red line left to the message
+# - warning   shows a yellow line left to the message
+# - danger    shows a green line left to the message
+# Unfortunately it's not possible to define a custom color
+#
+slack_msg_color: danger
+
+
+attach_related: true
