@@ -96,4 +96,4 @@ nagios_host: RIT-icat-prod
 nagios_service: iRODS queue polling
 
 # Current status for this Nagios service when the rule matches: (0=OK, 1=WARNING, 2=ERROR, 3=UNKNOWN)
-nagios_status: 2
+nagios_status: 1
