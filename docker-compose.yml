@@ -177,6 +177,7 @@ services:
       - default
   xnat-web:
     hostname: xnat-web
+    user: 900:900
     build:
       context: ./xnat/xnat-web
       args:
@@ -204,13 +205,9 @@ services:
     ports:
       - "8104:8104"
     volumes:
-      - ./xnat-data/home/logs:/data/xnat/home/logs
-      - ./xnat-data/home/plugins:/data/xnat/home/plugins
-      - ./xnat-data/archive:/data/xnat/archive
-      - ./xnat-data/build:/data/xnat/build
-      # - /var/run/docker.sock:/var/run/docker.sock
-      - /etc/localtime:/etc/localtime:ro
-      # - ./xnat/plugins:/data/xnat/home/plugins
+       - /etc/localtime:/etc/localtime:ro
+       - /var/run/docker.sock:/var/run/docker.sock
+       - xnatnfs:/data/xnat
     links:
       - xnat-db
     networks:
@@ -233,3 +230,11 @@ networks:
     external: true
   common_default:
     external: true
+
+volumes:
+  xnatnfs:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: addr=fhml-srv044.unimaas.nl,vers=4
+      device: :/export/xnatdata

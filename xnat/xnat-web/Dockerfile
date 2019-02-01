@@ -1,81 +1,71 @@
-FROM manishkumr/ubuntu_jdk7_image
+FROM tomcat:7-jre8-alpine
+MAINTAINER John Flavin <jflavin@wustl.edu>
 
-MAINTAINER Manish Kumar <rishimanish123@gmail.com>
+ARG XNAT_VER
+ARG XNAT_ROOT=/data/xnat
+ARG XNAT_HOME=/data/xnat/home
+ARG XNAT_DATASOURCE_DRIVER=org.postgresql.Driver
+ARG XNAT_DATASOURCE_URL=jdbc:postgresql://xnat-db/xnat
+ARG XNAT_DATASOURCE_USERNAME=xnat
+ARG XNAT_DATASOURCE_PASSWORD=xnat
+ARG XNAT_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQL9Dialect
+ARG TOMCAT_XNAT_FOLDER=ROOT
+ARG SMTP_ENABLED=false
+ARG SMTP_HOSTNAME=fake.fake
+ARG SMTP_PORT
+ARG AMTP_AUTH
+ARG SMTP_USERNAME
+ARG SMTP_PASSWORD
 
-ARG LOCALE
+ADD make-xnat-config.sh /usr/local/bin/make-xnat-config.sh
+ADD wait-for-postgres.sh /usr/local/bin/wait-for-postgres.sh
 
-RUN apt-get -qq update && \
-    apt-get -q -y upgrade && \
-    apt-get install -y sudo curl wget locales
+RUN addgroup -g 900 xnat && adduser -D -u 900 -G xnat xnat
 
-# Set locales
-RUN locale-gen $LOCALE.UTF-8
-ENV LANG $LOCALE.UTF-8
-ENV LANGUAGE $LOCALE.UTF-8
-ENV LC_ALL $LOCALE.UTF-8
+RUN apk add --no-cache \
+        postgresql-client \
+        wget
 
-# Fix sh
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+RUN rm -rf $CATALINA_HOME/webapps/*
 
-ENV TOMCAT_MAJOR 7
-ENV TOMCAT_VERSION 7.0.85
-# Get Tomcat
-ENV TOMCAT_TGZ_URLS \
-    https://www.apache.org/dyn/closer.cgi?action=download&filename=tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz \
-    # if the version is outdated, we might have to pull from the dist/archive :/
-    https://www-us.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz \
-    https://www.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz \
-    https://archive.apache.org/dist/tomcat/tomcat-$TOMCAT_MAJOR/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz
+RUN mkdir -p \
+        $CATALINA_HOME/webapps/${TOMCAT_XNAT_FOLDER} \
+        ${XNAT_HOME}/config \
+        ${XNAT_HOME}/logs \
+        ${XNAT_HOME}/plugins \
+        ${XNAT_HOME}/work \
+        ${XNAT_ROOT}/archive \
+        ${XNAT_ROOT}/build \
+        ${XNAT_ROOT}/cache \
+        ${XNAT_ROOT}/ftp \
+        ${XNAT_ROOT}/pipeline \
+        ${XNAT_ROOT}/prearchive && \
+    /usr/local/bin/make-xnat-config.sh && \
+    cd $CATALINA_HOME/webapps/ && \
+    wget https://api.bitbucket.org/2.0/repositories/xnatdev/xnat-web/downloads/xnat-web-${XNAT_VER}.war && \
+    cd ${TOMCAT_XNAT_FOLDER} && \
+    unzip -o ../xnat-web-${XNAT_VER}.war && \
+    rm -f ../xnat-web-${XNAT_VER}.war
 
-RUN set -eux; \
-        \
-        success=; \
-        for url in $TOMCAT_TGZ_URLS; do \
-                if wget -O /tmp/tomcat.tgz "$url"; then \
-                        success=1; \
-                        break; \
-                fi; \
-        done; \
-        [ -n "$success" ]; \
-        tar xzvf /tmp/tomcat.tgz -C /opt && \
-        mv /opt/apache-tomcat-${TOMCAT_VERSION} /opt/tomcat && \
-        rm /tmp/tomcat.tgz && \
-        rm -rf /opt/tomcat/webapps/*
+RUN chown -R 900:900 ${XNAT_ROOT}
 
-# Add admin/admin user
-ADD tomcat-users.xml /opt/tomcat/conf/
-# add server.xml
-ADD server.xml /opt/tomcat/conf/
-# Add xnat.home to config
-ADD setenv.sh /opt/tomcat/bin
-ENV CATALINA_HOME /opt/tomcat
-ENV PATH $PATH:$CATALINA_HOME/bin
-
-RUN adduser --disabled-password --gecos '' xnat
-
-# Download XNAT .war archive and deploy as ROOT container
-ENV XNAT_VERSION 1.7.4.1
-RUN wget -P /tmp/ https://api.bitbucket.org/2.0/repositories/xnatdev/xnat-web/downloads/xnat-web-${XNAT_VERSION}.war && \
-        mv /tmp/xnat-web-${XNAT_VERSION}.war /opt/tomcat/webapps/ROOT.war
-
-RUN mkdir -p /data/xnat/home/config
-
-WORKDIR /data/xnat/home
-
-RUN mkdir logs plugins work
-
-WORKDIR /data/xnat
-
-RUN mkdir archive build cache ftp pipeline prearchive
-
-ADD xnat-conf.properties /data/xnat/home/config
+RUN chown -R 900:900 ${CATALINA_HOME}
 
 EXPOSE 8080
-EXPOSE 8009
-EXPOSE 8104
 
-ADD setenv.sh /opt/tomcat/bin
-WORKDIR /opt/tomcat
+# Gebruik {} bij assignment!!
+ENV XNAT_HOME=${XNAT_HOME} \
+    XNAT_DATASOURCE_USERNAME=${XNAT_DATASOURCE_USERNAME} \
+    XNAT_ROOT=${XNAT_ROOT} \
+	XNAT_HOME=${XNAT_HOME} \
+	XNAT_DATASOURCE_DRIVER={XNAT_DATASOURCE_DRIVER} \
+	XNAT_DATASOURCE_URL={XNAT_DATASOURCE_URL} \
+	XNAT_DATASOURCE_USERNAME={XNAT_DATASOURCE_USERNAME} \
+	XNAT_DATASOURCE_PASSWORD={XNAT_DATASOURCE_PASSWORD} \
+	XNAT_HIBERNATE_DIALECT={XNAT_HIBERNATE_DIALECT} \
+	TOMCAT_XNAT_FOLDER={TOMCAT_XNAT_FOLDER} \
+	SMTP_ENABLED={SMTP_ENABLED} \
+	SMTP_HOSTNAME={SMTP_HOSTNAME}
+    
 
-# Launch Tomcat
-CMD ["/opt/tomcat/bin/catalina.sh", "run"]
+CMD ["wait-for-postgres.sh", "/usr/local/tomcat/bin/catalina.sh", "run"]
