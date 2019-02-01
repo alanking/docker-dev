@@ -221,7 +221,7 @@ services:
       - "5432"
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./xnat-postgres-data:/var/lib/postgresql/data
+      - xnatpgdata:/var/lib/postgresql/data
     networks:
       - default
 
@@ -238,3 +238,4 @@ volumes:
       type: nfs
       o: addr=fhml-srv044.unimaas.nl,vers=4
       device: :/export/xnatdata
+  xnatpgdata:
