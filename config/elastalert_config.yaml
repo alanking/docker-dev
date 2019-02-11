@@ -84,7 +84,7 @@ slack_webhook_url: "https://hooks.slack.com/services/TBXTSNXV1/BCW3CPJ7P/Td9lp4m
 nagios_nrdp_command: /usr/local/nrdp/clients/send_nrdp.py
 
 # servername and credentials for the Nagios server
-nagios_server: nagios
+nagios_server: nagios.prod.rit.unimaas.nl
 nagios_user: nrdp
 nagios_password: foobar
 
