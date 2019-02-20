@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM ubuntu:16.04
 
 # Load build arguments from environment
 ARG ENV_IRODS_VERSION
@@ -9,10 +9,14 @@ ARG ENV_CMAKE_LONG_VERSION
 ARG ENV_DOCKERIZE_VERSION
 ARG ENV_FILEBEAT_VERSION
 
+# Use apt-get NL mirrors
+RUN sed --in-place --regexp-extended "s/(\/\/)(archive\.ubuntu)/\1nl.\2/" /etc/apt/sources.list
+
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     apt-transport-https \
     wget \
+    less \
     unixodbc \
     super \
     libfuse2 \
@@ -31,9 +35,14 @@ RUN apt-get update \
     uuid-dev \
     libssl-dev \
     build-essential \
+    libxml2-dev \
+    lsb-release \
+    libcurl4-gnutls-dev \
+    libs3-2 \
+    libc++-dev \
     # packages required for building ruleset and microservices {{
     libssl-dev \
-    libcurl4-openssl-dev \
+#    libcurl4-openssl-dev \
     g++ \
     make
     # }} end
@@ -59,14 +68,15 @@ ENV IRODS_VERSION ${ENV_IRODS_VERSION}
 
 # install iRODS
 RUN wget -qO - https://packages.irods.org/irods-signing-key.asc | sudo apt-key add - \
-    && echo "deb [arch=amd64] https://packages.irods.org/apt/ trusty main" | sudo tee /etc/apt/sources.list.d/renci-irods.list \
+    && echo "deb [arch=amd64] https://packages.irods.org/apt/ $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/renci-irods.list \
     && apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     irods-server=${IRODS_VERSION} \
     irods-dev=${IRODS_VERSION} \
     # packages required for building microservices
     irods-externals-clang-runtime${ENV_IRODS_EXT_CLANG_RUNTIME_VERSION} \
-    irods-externals-clang${ENV_IRODS_EXT_CLANG_VERSION}
+    irods-externals-clang${ENV_IRODS_EXT_CLANG_VERSION} \
+    irods-externals-libs3a30e55e8-0
 
 # install Metalnx RMD
 ADD ./emc-metalnx-rmd-1.0-1.deb /tmp/emc-metalnx-rmd-1.0-1.deb

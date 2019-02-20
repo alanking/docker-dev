@@ -44,7 +44,7 @@ externals/metalnx-web git@github.com:MaastrichtUniversity/metalnx-web.git
 externals/rit-davrods git@github.com:MaastrichtUniversity/rit-davrods.git
 externals/crossref-lookup git@github.com:MaastrichtUniversity/crossref-lookup.git
 externals/epicpid-microservice git@github.com:MaastrichtUniversity/epicpid-microservice.git
-externals/irods_resource_plugin_rados git@github.com:MaastrichtUniversity/irods_resource_plugin_rados.git "
+externals/irods_resource_plugin_rados git@github.com:irods/irods_resource_plugin_rados.git"
 
 
 # do the required action in case of externals or exec

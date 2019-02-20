@@ -160,6 +160,7 @@ services:
       - ./externals/irods-microservices:/microservices
       - ./externals/irods-helper-cmd:/helpers
       - ./externals/irods_resource_plugin_rados:/irods_resource_plugin_rados
+      - ./externals/irods_resource_plugin_s3:/irods_resource_plugin_s3
   db:
     image: mysql:${ENV_MYSQL_VERSION}
     hostname: db

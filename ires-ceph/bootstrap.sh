@@ -65,15 +65,29 @@ echo "compiling iRODS rados plugin"
 cd /irods_resource_plugin_rados && cmake -DCMAKE_INSTALL_PREFIX=/ . && make && make install
 
 # Templating irados config file
-touch /etc/irods/irados.config && chown irods: /etc/irods/irados.config && chmod 600 /etc/irods/irados.config
+touch /etc/irods/irados.config && chown irods /etc/irods/irados.config && chmod 600 /etc/irods/irados.config
 echo "[global]
     mon host = ${CEPHGLMONHOST}
     
 [${CEPHGLUSER}]
     key = ${CEPHGLKEY}" > /etc/irods/irados.config
 
+# Add rados resource
 su - irods -c "iadmin mkresc radosResc irados ires-ceph:/tmp \"ceph|irods-dev|client.irods-dev\" "
 
+
+# Install iRODS librados plugin
+echo "compiling iRODS rados plugin"
+cd /irods_resource_plugin_s3 && cmake . && make package
+dpkg -i irods-resource-plugin-s3_2.5.0~bionic_amd64.deb
+
+# Templating irados config file
+touch /var/lib/irods/s3.keypair && chown irods /var/lib/irods/s3.keypair && chmod 600 /var/lib/irods/s3.keypair
+echo ${CEPHGLS3ACCESSKEY} > /var/lib/irods/s3.keypair
+echo ${CEPHGLS3SECRETKEY} >> /var/lib/irods/s3.keypair
+
+# Add S3 resource
+su - irods -c "iadmin mkresc s3resc s3 `hostname`:/irods-bucket/irods/Vault \"S3_DEFAULT_HOSTNAME=cephmongl01.unimaas.nl;S3_AUTH_FILE=/var/lib/irods/s3.keypair;S3_REGIONNAME=irods-dev;S3_RETRY_COUNT=1;S3_WAIT_TIME_SEC=3;S3_PROTO=HTTPS;ARCHIVE_NAMING_POLICY=consistent;HOST_MODE=cacheless_attached\""
 
 # this script must end with a persistent foreground process
 tail -F /var/lib/irods/log/rodsLog.*
