@@ -31,7 +31,6 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./irods.secrets.cfg:/etc/secrets:ro
-      - /tmp/icat_log:/var/lib/irods/log
   ires-ceph:
     build:
       context: ires-ceph/

@@ -2,7 +2,7 @@
 
 set -e
 
-source /etc/secrets
+#source /etc/secrets
 
 # Check if this is a first run of this container
 if [[ ! -e /var/run/irods_installed ]]; then
