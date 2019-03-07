@@ -4,8 +4,7 @@ FROM ubuntu:16.04
 ARG ENV_IRODS_VERSION
 ARG ENV_IRODS_EXT_CLANG_VERSION
 ARG ENV_IRODS_EXT_CLANG_RUNTIME_VERSION
-ARG ENV_CMAKE_VERSION
-ARG ENV_CMAKE_LONG_VERSION
+ARG ENV_IRODS_EXT_CMAKE_VERSION
 ARG ENV_FILEBEAT_VERSION
 
 # Use apt-get NL mirrors
@@ -36,23 +35,15 @@ RUN apt-get update \
     libssl-dev \
     libcurl4-openssl-dev \
     g++ \
-    make
+    make \
+    lsb-release
     # }} end
-
-# Ubuntu's package manager contains a very old version of cmake.
-# Install modern version with: (found on https://askubuntu.com/questions/952429/is-there-are-good-ppa-for-cmake-backports)
-ENV CMAKE_VERSION ${ENV_CMAKE_VERSION}
-ENV CMAKE_LONG_VERSION ${ENV_CMAKE_LONG_VERSION}
-RUN cd /tmp && \
-    wget https://cmake.org/files/v${CMAKE_VERSION}/cmake-${CMAKE_LONG_VERSION}-Linux-x86_64.sh && \
-    sudo sh cmake-${CMAKE_LONG_VERSION}-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir
-
 
 ENV IRODS_VERSION ${ENV_IRODS_VERSION}
 
 # install iRODS
 RUN wget -qO - https://packages.irods.org/irods-signing-key.asc | sudo apt-key add - \
-    && echo "deb [arch=amd64] https://packages.irods.org/apt/ xenial main" | sudo tee /etc/apt/sources.list.d/renci-irods.list \
+    && echo "deb [arch=amd64] https://packages.irods.org/apt/ $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/renci-irods.list \
     && apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     irods-runtime=${IRODS_VERSION} \
@@ -61,6 +52,7 @@ RUN wget -qO - https://packages.irods.org/irods-signing-key.asc | sudo apt-key a
     irods-database-plugin-postgres=${IRODS_VERSION} \
     irods-dev=${IRODS_VERSION} \
     # packages required for building microservices
+    irods-externals-cmake${ENV_IRODS_EXT_CMAKE_VERSION} \
     irods-externals-clang-runtime${ENV_IRODS_EXT_CLANG_RUNTIME_VERSION} \
     irods-externals-clang${ENV_IRODS_EXT_CLANG_VERSION}
 

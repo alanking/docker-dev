@@ -28,7 +28,7 @@ if [[ ! -e /var/run/irods_installed ]]; then
 
     su irods -c "/opt/irods/bootstrap_irods.sh"
 
-    # Change default resource to rootResc for irods-user
+    # Change default resource to rootResc for irods service account
     sed -i 's/\"irods_default_resource\"\:\ \"demoResc\"\,/\"irods_default_resource\"\:\ \"rootResc\"\,/' /var/lib/irods/.irods/irods_environment.json
 
     touch /var/run/irods_installed
