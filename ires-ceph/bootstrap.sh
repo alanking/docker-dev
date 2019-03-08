@@ -25,8 +25,21 @@ else
 fi
 
 # Install iRODS librados plugin
+
 echo "compiling iRODS rados plugin"
-cd /irods_resource_plugin_rados && cmake -DCMAKE_INSTALL_PREFIX=/ . && make && make install
+export PATH=/opt/irods-externals/cmake3.5.2-0/bin:${PATH}
+#cd /irods_resource_plugin_rados && cmake .. && make && make install
+cd /irods_resource_plugin_rados && mkdir build && cd build && cmake .. && make package
+echo "installing iRODS rados plugin"
+dpkg -i irods-resource-plugin-rados*.deb
+
+#echo "compiling iRODS rados plugin"
+#cd /irods_resource_plugin_rados
+#mkdir build_irods_resource_plugin_rados
+#cd build_irods_resource_plugin_rados
+#cmake ../irods_resource_plugin_rados # or cmake3 on CentOS
+#make package
+#dpkg -i *.deb
 
 # Templating irados config file
 touch /etc/irods/irados.config && chown irods: /etc/irods/irados.config && chmod 600 /etc/irods/irados.config
