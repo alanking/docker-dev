@@ -18,6 +18,9 @@ if [[ ! -e /var/run/irods_installed ]]; then
     # Dirty temp.password workaround
     sed -i 's/\"default_temporary_password_lifetime_in_seconds\"\:\ 120\,/\"default_temporary_password_lifetime_in_seconds\"\:\ 86400\,/' /etc/irods/server_config.json
 
+    cd /irods_resource_plugin_rados/build
+    dpkg -i irods-resource-plugin-rados*.deb
+
     touch /var/run/irods_installed
 
 else
@@ -26,12 +29,11 @@ fi
 
 # Install iRODS librados plugin
 
-echo "compiling iRODS rados plugin"
-export PATH=/opt/irods-externals/cmake3.5.2-0/bin:${PATH}
-#cd /irods_resource_plugin_rados && cmake .. && make && make install
-cd /irods_resource_plugin_rados && mkdir build && cd build && cmake .. && make package
-echo "installing iRODS rados plugin"
-dpkg -i irods-resource-plugin-rados*.deb
+#echo "compiling iRODS rados plugin"
+#export PATH=/opt/irods-externals/cmake3.5.2-0/bin:${PATH}
+#cd /irods_resource_plugin_rados && cmake . && make package
+#cd /irods_resource_plugin_rados && mkdir build && cd build && cmake .. && make package
+#echo "installing iRODS rados plugin"
 
 #echo "compiling iRODS rados plugin"
 #cd /irods_resource_plugin_rados

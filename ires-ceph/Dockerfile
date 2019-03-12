@@ -14,6 +14,8 @@ RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     apt-transport-https \
     wget \
+    less \
+    vim \
     unixodbc \
     super \
     libfuse2 \
@@ -73,7 +75,7 @@ ADD ./config.sh /opt/irods/config.sh
 ADD ./bootstrap.sh /opt/irods/bootstrap.sh
 RUN chmod a+x /opt/irods/*
 
-EXPOSE 1248 1247
+EXPOSE 1248 1247 20000-20199
 
 
 RUN curl -fSL https://github.com/jwilder/dockerize/releases/download/${ENV_DOCKERIZE_VERSION}/dockerize-linux-amd64-${ENV_DOCKERIZE_VERSION}.tar.gz -o dockerize-linux-amd64-${ENV_DOCKERIZE_VERSION}.tar.gz \

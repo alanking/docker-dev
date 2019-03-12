@@ -65,7 +65,7 @@ ADD ./bootstrap.sh /opt/irods/bootstrap.sh
 ADD ./bootstrap_irods.sh /opt/irods/bootstrap_irods.sh
 RUN chmod a+x /opt/irods/*
 
-EXPOSE 1248 1247
+EXPOSE 1248 1247 20000-20199
 
 ###############################################################################
 
